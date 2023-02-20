@@ -1,5 +1,4 @@
 'use strict';
-import {objectArray} from './goods.js';
 
 const modalWindowTitleSelector = document.querySelector('.modal__title');
 const formSelector = document.querySelector('.modal__fieldset');
@@ -71,4 +70,14 @@ const renderGoods = (array) => {
   });
 };
 
-renderGoods(objectArray);
+const addGoodsButton = document.querySelector('.panel__add-goods');
+addGoodsButton.addEventListener('click', () => {
+  document.querySelector('.overlay').classList.add('active');
+});
+
+const modalCloseButton = document.querySelector('.modal__close');
+modalCloseButton.addEventListener('click', () => {
+  document.querySelector('.overlay').classList.remove('active');
+});
+
+
