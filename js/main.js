@@ -2,13 +2,11 @@ const modalWindowTitleSelector = document.querySelector('.modal__title');
 const formSelector = document.querySelector('.modal__fieldset');
 const checkBoxOnFormSelector = document.querySelector('.modal__checkbox');
 const discountFieldSelector = document.querySelector('.modal__input_discount');
-const overlayActiv = document.querySelector('.overlay active');
 const overlay = document.querySelector('.overlay');
 const tableBody = document.querySelector('.table__body');
 const overlayModal = document.querySelector('.overlay__modal');
-// const discountCheckBox = document.getElementById('discount');
-const discountCheckBox = document.querySelector('#discount');
-const discountInput = document.querySelector('.modal__input_discount');
+const addGoodsButton = document.querySelector('.panel__add-goods');
+const cmsGoods = document.querySelector('.cms__goods');
 
 let db = [
   {
@@ -135,13 +133,32 @@ const renderGoods = (array) => {
   });
 };
 
-const closeModal = () => {
-  document.querySelector('.overlay').classList.remove('active');
-}
+const openModal = () => {
+  overlay.classList.add('active');
+};
 
-const addGoodsButton = document.querySelector('.panel__add-goods');
-addGoodsButton.addEventListener('click', () => {
-  document.querySelector('.overlay').classList.add('active');
+const closeModal = () => {
+  overlay.classList.remove('active');
+};
+
+const deleteObject = (id) => {
+  db = db.filter((item) => item.id !== parseInt(id));
+  console.log(db);
+};
+
+cmsGoods.addEventListener('click', (e) => {
+  const target = e.target;
+
+  if (target === addGoodsButton) {
+    openModal();
+  } else if (target === target.closest('.table__btn_del')) {
+    const tableRow = target.closest('tr');
+    const getId = tableRow
+      .querySelector('.table__cell_name')
+      .getAttribute('data-id');
+    deleteObject(getId);
+    tableRow.remove();
+  }
 });
 
 overlay.addEventListener('click', (e) => {
@@ -152,50 +169,34 @@ overlay.addEventListener('click', (e) => {
   }
 });
 
-const deleteObject = (id) => {
-  db = db.filter((item) => item.id !== parseInt(id));
-  console.log(db);
-};
-
-tableBody.addEventListener('click', (e) => {
-  const target = e.target;
-  if (target === target.closest('.table__btn_del')) {
-    const tableRow = target.closest('tr');
-    const getId = tableRow
-      .querySelector('.table__cell_name')
-      .getAttribute('data-id');
-    deleteObject(getId);
-    tableRow.remove();
-  }
-});
+// tableBody.addEventListener('click', (e) => {
+//   const target = e.target;
+//   if (target === target.closest('.table__btn_del')) {
+//     const tableRow = target.closest('tr');
+//     const getId = tableRow
+//       .querySelector('.table__cell_name')
+//       .getAttribute('data-id');
+//     deleteObject(getId);
+//     tableRow.remove();
+//   }
+// });
 
 overlayModal.addEventListener('click', (e) => {
   const target = e.target;
-  // if (target === discountCheckBox) {
-  //   discountInput.disabled = false;
-  // }
-  if (target === discountCheckBox) {
-    if (discountCheckBox.checked) {
-      discountInput.disabled = false;
+  if (target === checkBoxOnFormSelector) {
+    if (checkBoxOnFormSelector.checked) {
+      discountFieldSelector.disabled = false;
     } else {
-      discountInput.disabled = true;
+      discountFieldSelector.disabled = true;
     }
   }
-  // } else if (target.closest('.modal__close')) {
-  //   document.querySelector('.overlay').classList.remove('active');
-  //   console.log('check');
-
-  // }
 });
-
 
 overlayModal.addEventListener('submit', (e) => {
   e.preventDefault();
-  const formData = new FormData (e.target);
+  const formData = new FormData(e.target);
   console.log(...[formData.entries()]);
   closeModal();
-
 });
-
 
 renderGoods(db);
