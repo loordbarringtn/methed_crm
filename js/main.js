@@ -7,6 +7,8 @@ const tableBody = document.querySelector('.table__body');
 const overlayModal = document.querySelector('.overlay__modal');
 const addGoodsButton = document.querySelector('.panel__add-goods');
 const cmsGoods = document.querySelector('.cms__goods');
+const priceColumn = document.querySelectorAll('.table__cell:nth-child(7)');
+const totalPriceField = document.querySelector('.cms__total-price');
 
 let db = [
   {
@@ -127,10 +129,24 @@ const createRow = (object, index) => {
   return tableRow;
 };
 
+const calculateTotalPrice = () => {
+  const priceColumn = document.querySelectorAll('.table__cell:nth-child(7)');
+  let totalPrice = 0;
+  priceColumn.forEach((row) => {
+    const rowPrice = parseFloat(row.textContent);
+    if (!isNaN(rowPrice)) {
+      totalPrice += rowPrice;
+    }
+  });
+  totalPriceField.textContent = `$ ${totalPrice}`;
+  console.log(totalPrice);
+};
+
 const renderGoods = (array) => {
   array.map((element, index) => {
     tableBody.append(createRow(element, ++index));
   });
+  calculateTotalPrice();
 };
 
 const openModal = () => {
@@ -148,7 +164,6 @@ const deleteObject = (id) => {
 
 cmsGoods.addEventListener('click', (e) => {
   const target = e.target;
-
   if (target === addGoodsButton) {
     openModal();
   } else if (target === target.closest('.table__btn_del')) {
@@ -168,18 +183,6 @@ overlay.addEventListener('click', (e) => {
     document.querySelector('.overlay').classList.remove('active');
   }
 });
-
-// tableBody.addEventListener('click', (e) => {
-//   const target = e.target;
-//   if (target === target.closest('.table__btn_del')) {
-//     const tableRow = target.closest('tr');
-//     const getId = tableRow
-//       .querySelector('.table__cell_name')
-//       .getAttribute('data-id');
-//     deleteObject(getId);
-//     tableRow.remove();
-//   }
-// });
 
 overlayModal.addEventListener('click', (e) => {
   const target = e.target;
