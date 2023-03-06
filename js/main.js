@@ -9,6 +9,10 @@ const addGoodsButton = document.querySelector('.panel__add-goods');
 const cmsGoods = document.querySelector('.cms__goods');
 const priceColumn = document.querySelectorAll('.table__cell:nth-child(7)');
 const totalPriceField = document.querySelector('.cms__total-price');
+const vendorCodeId = document.querySelector('.vendor-code__id');
+const modalWindowQuantity = document.querySelector('#count');
+const modalWindowPrice = document.querySelector('#price');
+const modalWindowTotalPrice = document.querySelector('.modal__total-price');
 
 let db = [
   {
@@ -129,28 +133,31 @@ const createRow = (object, index) => {
   return tableRow;
 };
 
-const calculateTotalPrice = () => {
-  const priceColumn = document.querySelectorAll('.table__cell:nth-child(7)');
-  let totalPrice = 0;
-  priceColumn.forEach((row) => {
-    const rowPrice = parseFloat(row.textContent);
-    if (!isNaN(rowPrice)) {
-      totalPrice += rowPrice;
-    }
-  });
+const calculateTotalPrice = (array) => {
+  const totalPrice = array.reduce((accumulator, object) => 
+  accumulator + (object.price * object.count), 0);
   totalPriceField.textContent = `$ ${totalPrice}`;
-  console.log(totalPrice);
+};
+
+const generateRandomId = () => Math.floor(Math.random() * 10) +
+  Date.now().toString().slice(0, 5) + Math.floor(Math.random() * 100);
+
+const calculateModalTotalPrice = () => {
+  modalWindowTotalPrice.textContent = modalWindowPrice * modalWindowQuantity;
 };
 
 const renderGoods = (array) => {
+  tableBody.textContent = null;
   array.map((element, index) => {
     tableBody.append(createRow(element, ++index));
   });
-  calculateTotalPrice();
+  calculateTotalPrice(array);
 };
 
 const openModal = () => {
   overlay.classList.add('active');
+  vendorCodeId.textContent = generateRandomId();
+  calculateModalTotalPrice();
 };
 
 const closeModal = () => {
@@ -192,14 +199,20 @@ overlayModal.addEventListener('click', (e) => {
     } else {
       discountFieldSelector.disabled = true;
     }
+  } else if (target === modalWindowPrice || target === modalWindowQuantity) {
+    console.log(e.target);
+    calculateModalTotalPrice();
   }
 });
 
 overlayModal.addEventListener('submit', (e) => {
   e.preventDefault();
   const formData = new FormData(e.target);
+  const newContact = Object.fromEntries(formData);
+  tableBody.append(createRow(newContact, 1));
   console.log(...[formData.entries()]);
   closeModal();
 });
 
 renderGoods(db);
+generateRandomId();
