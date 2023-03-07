@@ -7,12 +7,12 @@ const tableBody = document.querySelector('.table__body');
 const overlayModal = document.querySelector('.overlay__modal');
 const addGoodsButton = document.querySelector('.panel__add-goods');
 const cmsGoods = document.querySelector('.cms__goods');
-const priceColumn = document.querySelectorAll('.table__cell:nth-child(7)');
 const totalPriceField = document.querySelector('.cms__total-price');
 const vendorCodeId = document.querySelector('.vendor-code__id');
 const modalWindowQuantity = document.querySelector('#count');
 const modalWindowPrice = document.querySelector('#price');
 const modalWindowTotalPrice = document.querySelector('.modal__total-price');
+const form = document.querySelector('.modal__form');
 
 let db = [
   {
@@ -143,7 +143,7 @@ const generateRandomId = () => Math.floor(Math.random() * 10) +
   Date.now().toString().slice(0, 5) + Math.floor(Math.random() * 100);
 
 const calculateModalTotalPrice = () => {
-  modalWindowTotalPrice.textContent = modalWindowPrice * modalWindowQuantity;
+  modalWindowTotalPrice.textContent = modalWindowPrice.value * modalWindowQuantity.value;
 };
 
 const renderGoods = (array) => {
@@ -157,7 +157,8 @@ const renderGoods = (array) => {
 const openModal = () => {
   overlay.classList.add('active');
   vendorCodeId.textContent = generateRandomId();
-  calculateModalTotalPrice();
+  modalWindowTotalPrice.textContent = 0;
+  generateRandomId();
 };
 
 const closeModal = () => {
@@ -185,7 +186,6 @@ cmsGoods.addEventListener('click', (e) => {
 
 overlay.addEventListener('click', (e) => {
   const target = e.target;
-  console.log(target);
   if (target === overlay || target.closest('.modal__close')) {
     document.querySelector('.overlay').classList.remove('active');
   }
@@ -198,21 +198,26 @@ overlayModal.addEventListener('click', (e) => {
       discountFieldSelector.disabled = false;
     } else {
       discountFieldSelector.disabled = true;
+      discountFieldSelector.value = null;
     }
-  } else if (target === modalWindowPrice || target === modalWindowQuantity) {
-    console.log(e.target);
+  } else if (target === modalWindowPrice || target === modalWindowQuantity 
+    || target === formSelector || target === form) {
     calculateModalTotalPrice();
   }
 });
 
-overlayModal.addEventListener('submit', (e) => {
+form.addEventListener('submit', (e) => {
   e.preventDefault();
   const formData = new FormData(e.target);
-  const newContact = Object.fromEntries(formData);
-  tableBody.append(createRow(newContact, 1));
-  console.log(...[formData.entries()]);
+  const newGood = Object.fromEntries(formData);
+  console.log(newGood);
+  newGood.id = vendorCodeId.textContent;
+  newGood.title = document.getElementById('name').value;
+  db.push(newGood);
+  tableBody.append(createRow(newGood, db.length++));
+  form.reset();
   closeModal();
+  calculateTotalPrice(db);
 });
 
 renderGoods(db);
-generateRandomId();
