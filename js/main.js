@@ -76,7 +76,7 @@ let db = [
     },
   },
 ];
-
+localStorage.setItem('db', db);
 const createRow = (object, index) => {
   const tableRow = document.createElement('tr');
   const tableData1 = document.createElement('td');
@@ -95,7 +95,7 @@ const createRow = (object, index) => {
   tableData2.classList.add(
     'table__cell',
     'table__cell_left',
-    'table__cell_name'
+    'table__cell_name',
   );
   tableData2.setAttribute('data-id', object.id);
   tableData2.textContent = object.title;
@@ -128,7 +128,7 @@ const createRow = (object, index) => {
     tableData5,
     tableData6,
     tableData7,
-    tableData8
+    tableData8,
   );
   return tableRow;
 };
@@ -167,7 +167,7 @@ const closeModal = () => {
 
 const deleteObject = (id) => {
   db = db.filter((item) => item.id !== parseInt(id));
-  console.log(db);
+  renderGoods(db);
 };
 
 cmsGoods.addEventListener('click', (e) => {
@@ -190,7 +190,9 @@ overlay.addEventListener('click', (e) => {
     document.querySelector('.overlay').classList.remove('active');
   }
 });
-
+[modalWindowPrice, modalWindowQuantity].forEach(item => {
+  item.addEventListener('blur', calculateModalTotalPrice);
+})
 overlayModal.addEventListener('click', (e) => {
   const target = e.target;
   if (target === checkBoxOnFormSelector) {
@@ -200,8 +202,7 @@ overlayModal.addEventListener('click', (e) => {
       discountFieldSelector.disabled = true;
       discountFieldSelector.value = null;
     }
-  } else if (target === modalWindowPrice || target === modalWindowQuantity 
-    || target === formSelector || target === form) {
+  } else if (target === formSelector || target === form) {
     calculateModalTotalPrice();
   }
 });
