@@ -61,22 +61,9 @@ let db = [
   },
 ];
 
-
-// export const getDb = () => db;
-
-
-// export const getDb = () => {
-//     return [...db];
-//   };
-
-
 export const getDb = () => db;
-
-
-
-
 export const setDb = (newData) => {
-    db = newData;
-    return db;
-  };
-  
+  db = newData;
+  // return db;
+};
+

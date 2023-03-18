@@ -60,9 +60,7 @@ const createRow = (object, index) => {
 const renderGoods = (array) => {
   tableBody.textContent = null;
   array.map((element, index) => {
-    // tableBody.append(createRow(element, ++index));
-    tableBody.append(createRow(element, index+1));
-
+    tableBody.append(createRow(element, ++index));
   });
   calculateTotalPrice(array);
 };
