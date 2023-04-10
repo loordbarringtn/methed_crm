@@ -64,6 +64,5 @@ let db = [
 export const getDb = () => db;
 export const setDb = (newData) => {
   db = newData;
-  // return db;
 };
 

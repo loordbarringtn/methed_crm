@@ -39,6 +39,7 @@ const createRow = (object, index) => {
   tableData8.classList.add('table__cell', 'table__cell_btn-wrapper');
   const button1 = document.createElement('button');
   button1.classList.add('table__btn', 'table__btn_pic');
+  button1.setAttribute('data-pic', './img/imageForUploadWindow.png');
   const button2 = document.createElement('button');
   button2.classList.add('table__btn', 'table__btn_edit');
   const button3 = document.createElement('button');

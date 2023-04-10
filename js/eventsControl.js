@@ -46,7 +46,15 @@ cmsGoods.addEventListener('click', (e) => {
       .getAttribute('data-id');
     deleteObject(getId1);
     tableRow.remove();
-  }
+  } else if (target === target.closest('.table__btn_pic')) {
+    const screenWidth = window.screen.width;
+    const screenHeight = window.screen.height;
+    const windowWidth = 800;
+    const windowHeight = 600;
+    let x = (screenWidth - windowWidth) / 2;
+    let y = (screenHeight - windowHeight) / 2;
+    window.open(target.getAttribute('data-pic'), "_blank", "width=800, height=600, top=" + y + ", left=" + x);
+  };
 });
 
 overlay.addEventListener('click', (e) => {
